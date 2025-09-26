@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="720" height="1280" viewBox="0 0 720 1280">
+  <rect width="100%" height="100%" fill="#fbf8f3" />
+
+  <!-- Judul -->
+  <text x="50%" y="40%" text-anchor="middle"
+        font-family="Helvetica, Arial, sans-serif"
+        font-size="64" font-weight="700" fill="#114b3b">
+    Snake And Ladders
+  </text>
+
+  <!-- Teks LOADING + animasi titik -->
+  <text x="50%" y="55%" text-anchor="middle"
+        font-family="Helvetica, Arial, sans-serif"
+        font-size="36" font-weight="700" fill="#114b3b">
+    LOADING
+  </text>
+
+  <!-- Titik 1 -->
+  <circle cx="400" cy="710" r="5" fill="#114b3b" opacity="0.2">
+    <animate attributeName="opacity"
+             values="0.2;1;0.2"
+             dur="1s" begin="0s"
+             repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Titik 2 -->
+  <circle cx="420" cy="710" r="5" fill="#114b3b" opacity="0.2">
+    <animate attributeName="opacity"
+             values="0.2;1;0.2"
+             dur="1s" begin="0.3s"
+             repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Titik 3 -->
+  <circle cx="440" cy="710" r="5" fill="#114b3b" opacity="0.2">
+    <animate attributeName="opacity"
+             values="0.2;1;0.2"
+             dur="1s" begin="0.6s"
+             repeatCount="indefinite"/>
+  </circle>
+</svg>
