@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="720" height="1280" viewBox="0 0 720 1280" role="img" aria-label="Snake And Ladders Loading Screen">
+
+  <defs>
+    <!-- Colors -->
+    <style type="text/css"><![CDATA[
+      .bg { fill: #fbf8f3; }
+      .title { fill: #114b3b; font-family: "Helvetica Neue", Arial, sans-serif; font-weight:700; font-size:72px; letter-spacing:1px; }
+      .coin { fill: #f6b33f; stroke:#114b3b; stroke-width:6px; }
+      .coin-inner { fill:#ffd67a; }
+      .snake { fill:#60a86b; stroke:#114b3b; stroke-width:8px; stroke-linejoin:round; stroke-linecap:round; }
+      .ladder { fill:#e95b4a; stroke:#114b3b; stroke-width:6px; }
+      .eth { fill:#1e3a36; opacity:0.95; }
+      .grid { fill:none; stroke:#0f3b33; stroke-width:6px; opacity:0.06; }
+      .loading-text { fill:#114b3b; font-family: "Helvetica Neue", Arial, sans-serif; font-weight:700; font-size:36px; letter-spacing:2px; }
+    ]]></style>
+    <!-- simple snake shape path to reuse -->
+    <path id="snakePath" d="M0,0 C30,-40 90,-40 120,0 C150,40 210,40 240,0 C270,-40 330,-40 360,0 C390,40 450,40 480,0" />
+  </defs>
+
+  <!-- Background -->
+  <rect class="bg" x="0" y="0" width="720" height="1280" />
+
+  <!-- Title -->
+  <text class="title" x="50%" y="160" dominant-baseline="middle" text-anchor="middle">
+    Snake And
+  </text>
+  <text class="title" x="50%" y="240" dominant-baseline="middle" text-anchor="middle">
+    Ladders
+  </text>
+
+  <!-- Center group for icons -->
+  <g id="center" transform="translate(360,560)">
+
+    <!-- coin (rotating) -->
+    <g id="coin" transform="translate(0,90)">
+      <circle class="coin" r="72" />
+      <circle class="coin-inner" r="44" />
+      <text x="0" y="12" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="40" fill="#114b3b">C</text>
+      <!-- rotation animation -->
+      <animateTransform attributeName="transform"
+                        type="rotate"
+                        from="0 0 90"
+                        to="360 0 90"
+                        dur="1.2s"
+                        repeatCount="indefinite" />
+    </g>
+
+    <!-- small coin on left (subtle bob) -->
+    <g id="coin2" transform="translate(-140,140)">
+      <circle class="coin" r="28" />
+      <circle class="coin-inner" r="16" />
+      <animateTransform attributeName="transform"
+                        type="translate"
+                        values="-140,140; -140,132; -140,140"
+                        dur="1.2s"
+                        repeatCount="indefinite" />
+    </g>
+
+    <!-- Ethereum symbol on right -->
+    <g id="eth" transform="translate(140,140) scale(0.9)" aria-label="Ethereum">
+      <polygon class="eth" points="0,-40 30,-10 0,10 -30,-10" transform="translate(0,-8)"/>
+      <polygon class="eth" points="0,40 30,10 0,-10 -30,10" transform="translate(0,8)"/>
+      <polygon class="eth" points="0,-24 20,-4 0,14 -20,-4" fill="#0f3b33" opacity="0.05"/>
+    </g>
+
+    <!-- Ladder (static, decorative) -->
+    <g transform="translate(-80,-20) rotate(-18)" aria-hidden="true">
+      <rect class="ladder" x="-6" y="-70" width="12" height="160" rx="6" />
+      <rect class="ladder" x="56" y="-70" width="12" height="160" rx="6" />
+      <!-- ladder rungs -->
+      <g transform="translate(0,-40)">
+        <rect class="ladder" x="8" y="0" width="48" height="10" rx="4" />
+        <rect class="ladder" x="8" y="30" width="48" height="10" rx="4" />
+        <rect class="ladder" x="8" y="60" width="48" height="10" rx="4" />
+      </g>
+    </g>
+
+    <!-- Snake group (animated sway) -->
+    <g id="snakeGroup" transform="translate(-280,-40) scale(0.9)">
+      <!-- Use a drawn snake body with path shapes for a plump look -->
+      <path class="snake" d="M100 80
+             C60 40 20 40 0 70
+             C-20 100 20 130 60 120
+             C100 110 140 140 180 130
+             C220 120 240 90 210 70
+             C180 50 140 60 100 80z" />
+      <!-- head highlight -->
+      <circle cx="0" cy="70" r="6" fill="#114b3b"/>
+      <!-- tongue -->
+      <path d="M-6 64 L-14 56 L-8 58" fill="#e95b4a" />
+      <!-- sway animation (small horizontal translate + rotate) -->
+      <animateTransform attributeName="transform"
+                        type="translate"
+                        values="-280,-40; -270,-40; -280,-40; -290,-40; -280,-40"
+                        dur="2.2s"
+                        repeatCount="indefinite"/>
+      <animateTransform attributeName="transform"
+                        type="rotate"
+                        additive="sum"
+                        values="-3; 0; 3; 0; -3"
+                        dur="2.2s"
+                        repeatCount="indefinite"/>
+    </g>
+
+  </g> <!-- center -->
+
+  <!-- Loading text and animated dots -->
+  <g id="loading" transform="translate(360,1030)" text-anchor="middle" aria-hidden="false">
+    <text class="loading-text" x="0" y="0" dominant-baseline="middle" text-anchor="middle">LOADING</text>
+
+    <!-- three dots that pulse sequentially -->
+    <g transform="translate(76,0)">
+      <circle cx="14" cy="0" r="6" fill="#114b3b" opacity="0.2">
+        <animate attributeName="opacity" values="0.2;1;0.2" dur="1s" begin="0s" repeatCount="indefinite" />
+      </circle>
+      <circle cx="36" cy="0" r="6" fill="#114b3b" opacity="0.2">
+        <animate attributeName="opacity" values="0.2;1;0.2" dur="1s" begin="0.2s" repeatCount="indefinite" />
+      </circle>
+      <circle cx="58" cy="0" r="6" fill="#114b3b" opacity="0.2">
+        <animate attributeName="opacity" values="0.2;1;0.2" dur="1s" begin="0.4s" repeatCount="indefinite" />
+      </circle>
+    </g>
+  </g>
+
+  <!-- subtle decorative rounded board behind center (faded) -->
+  <g transform="translate(360,560)">
+    <rect x="-280" y="-220" rx="30" ry="30" width="560" height="420" class="grid"/>
+  </g>
+
+  <!-- Accessibility: hide animations from assistive tech repeating text once -->
+  <desc>Loading screen for Snake And Ladders. Animated snake sways and coins rotate while loading dots pulse.</desc>
+</svg>
