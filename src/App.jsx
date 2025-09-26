@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { sdk } from "@farcaster/miniapp-sdk";
+import LoginFarcaster from "./LoginFarcaster";
 
 const BOARD_SIZE = 5; // 5x5 grid
 const SNAKES = { 22: 12, 18: 8 }; // turun
@@ -8,6 +9,7 @@ const LADDERS = { 3: 11, 6: 17 }; // naik
 export default function App() {
   const [position, setPosition] = useState(1);
   const [dice, setDice] = useState(null);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     sdk.actions.ready();
@@ -23,6 +25,18 @@ export default function App() {
     setPosition(newPos);
   };
 
+  const handleLogin = (userData) => {
+    setUser(userData);
+  };
+
+  if (!user) {
+    return (
+      <div style={{padding:'2rem', fontFamily:'sans-serif', textAlign:'center', minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center'}}>
+        <LoginFarcaster onLogin={handleLogin} />
+      </div>
+    );
+  }
+
   const cells = [];
   for (let i = BOARD_SIZE * BOARD_SIZE; i >= 1; i--) {
     cells.push(i);
@@ -30,7 +44,12 @@ export default function App() {
 
   return (
     <div style={{padding:'1rem', fontFamily:'sans-serif', textAlign:'center'}}>
-      <h1>Crypto Snakes & Ladders</h1>
+      <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'1rem'}}>
+        <h1>Crypto Snakes & Ladders</h1>
+        <div style={{fontSize:'0.9rem', color:'#666'}}>
+          Welcome, {user.username || user.displayName}!
+        </div>
+      </div>
       <button onClick={rollDice} style={{padding:'0.5rem 1rem', background:'#6b46c1', color:'white', border:'none', borderRadius:'8px', marginBottom:'0.5rem'}}>
         Lempar Dadu
       </button>
