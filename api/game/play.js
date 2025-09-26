@@ -1,9 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Client untuk serverless (pakai Service Role Key)
 const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY // service role key
 );
 
 export default async function handler(req, res) {
@@ -11,64 +10,41 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Ambil farcaster_id dari body
   const { farcaster_id } = req.body;
 
-  if (!farcaster_id) {
-    return res.status(400).json({ error: 'Missing farcaster_id' });
-  }
-
-  // Cari user di tabel users
-  const { data: user, error: userError } = await supabase
+  const { data: user } = await supabase
     .from('users')
-    .select('*')
+    .select('id')
     .eq('farcaster_id', farcaster_id)
     .single();
 
-  if (userError || !user) {
-    return res.status(401).json({ error: 'User not found. Please login first.' });
+  if (!user) {
+    return res.status(400).json({ error: 'User not found' });
   }
 
-  // Hitung jumlah percobaan hari ini
-  const startOfDay = new Date();
-  startOfDay.setUTCHours(0, 0, 0, 0);
+  const today = new Date().toISOString().split('T')[0];
 
-  const { count, error: countError } = await supabase
-    .from('plays')
-    .select('*', { count: 'exact', head: true })
+  const { data: existing } = await supabase
+    .from('checkins')
+    .select('id')
     .eq('user_id', user.id)
-    .gte('created_at', startOfDay.toISOString());
+    .eq('checked_at', today)
+    .single();
 
-  if (countError) {
-    return res.status(500).json({ error: countError.message });
+  if (existing) {
+    return res.status(200).json({ message: 'Already checked in today' });
   }
 
-  if (count >= 5) {
-    return res.status(403).json({ error: 'Daily attempts exhausted' });
-  }
+  await supabase.from('checkins').insert({
+    user_id: user.id,
+    checked_at: today,
+  });
 
-  // Contoh logic game: roll dadu 1–6, poin sama dengan roll
-  const roll = Math.floor(Math.random() * 6) + 1;
-  const awarded = roll;
+  await supabase.from('points').insert({
+    user_id: user.id,
+    amount: 10,
+    reason: 'daily_checkin'
+  });
 
-  // Simpan play
-  const { error: playError } = await supabase
-    .from('plays')
-    .insert([{ user_id: user.id, points_awarded: awarded, result: { roll } }]);
-
-  if (playError) {
-    return res.status(500).json({ error: playError.message });
-  }
-
-  // Simpan poin
-  const { error: pointError } = await supabase
-    .from('points')
-    .insert([{ user_id: user.id, amount: awarded, reason: 'play' }]);
-
-  if (pointError) {
-    return res.status(500).json({ error: pointError.message });
-  }
-
-  const attemptsLeft = 5 - (count + 1);
-  return res.status(200).json({ roll, awarded, attemptsLeft });
+  res.status(200).json({ message: 'Check-in successful, +10 points awarded!' });
 }
